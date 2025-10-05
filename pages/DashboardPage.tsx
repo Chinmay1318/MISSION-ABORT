@@ -34,9 +34,9 @@ const ModelTrainer: React.FC<{ onTrain: (accuracy: number) => void }> = ({ onTra
             <div>
                 <label htmlFor="model-select" className="block text-xs font-medium text-gray-400 mb-2">Select Model</label>
                 <select id="model-select" value={model} onChange={(e) => setModel(e.target.value)} className="w-full bg-gray-700/50 border border-gray-600 rounded-lg p-2 text-white text-sm focus:ring-blue-500 focus:border-blue-500">
-                    <option>Random Forest</option>
-                    <option>XGBoost</option>
-                    <option>Neural Network</option>
+                    <option>Gradient Boosting</option>
+                    <option>LightGBM Classifier</option>
+                    <option>Ensemble Model</option>
                 </select>
             </div>
             <div>
