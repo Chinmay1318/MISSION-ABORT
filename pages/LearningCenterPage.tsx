@@ -5,7 +5,7 @@ import AnimatedCard from '../components/AnimatedCard';
 const missions = [
   {
     name: "Kepler",
-    image: "https://images.unsplash.com/photo-1614726353900-95e46c8b5bab?q=80&w=1200&auto=format&fit=crop",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Kepler_Space_Telescope_spacecraft_model_2.png/500px-Kepler_Space_Telescope_spacecraft_model_2.png",
     duration: "2009 - 2018",
     discoveries: "2,662 confirmed",
     method: "Transit Photometry",
@@ -13,7 +13,7 @@ const missions = [
   },
   {
     name: "TESS",
-    image: "https://images.unsplash.com/photo-1582092238363-913697abe55b?q=80&w=1200&auto=format&fit=crop",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Transiting_Exoplanet_Survey_Satellite_artist_concept_%28transparent_background%29.png/500px-Transiting_Exoplanet_Survey_Satellite_artist_concept_%28transparent_background%29.png",
     duration: "2018 - Present",
     discoveries: "400+ confirmed, 6000+ candidates",
     method: "All-Sky Transit Survey",
@@ -21,7 +21,7 @@ const missions = [
   },
   {
     name: "JWST",
-    image: "https://images.unsplash.com/photo-1639972352126-b33333333216?q=80&w=1200&auto=format&fit=crop",
+    image: "https://room.eu.com/images/contents/issue31-essential-guide-to-the-james-webb-space-telescope.jpg",
     duration: "2021 - Present",
     discoveries: "Atmospheric Characterization",
     method: "Infrared Spectroscopy",
@@ -49,16 +49,15 @@ export default function LearningCenterPage() {
         <div style={{ animation: 'fade-in-up 0.8s ease-out' }}>
             <Header title="Learning Center" subtitle="Explore the pioneering missions that discovered thousands of new worlds" />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                 {missions.map((mission, index) => (
                     <div key={mission.name} className="flex" style={{ animation: `fade-in-up ${0.5 + index * 0.15}s ease-out both` }}>
                         <AnimatedCard className="flex flex-col w-full">
-                            <div className="relative h-48 w-full -m-6 mb-4 overflow-hidden rounded-t-xl mission-card-bg" style={{ backgroundImage: `url(${mission.image})`, backgroundPosition: 'center' }}>
+                            <div className="relative h-48 w-full -m-6 mb-4 ml-1 overflow-hidden rounded-t-xl mission-card-bg" style={{ backgroundImage: `url(${mission.image})`, backgroundPosition: 'center' }}>
                                 <div className="absolute inset-0 bg-gradient-to-t from-gray-800/60 via-gray-800/20 to-transparent"></div>
                                 <h3 className="absolute bottom-4 left-4 text-3xl font-bold font-orbitron text-white">{mission.name}</h3>
                             </div>
-                            
-                            <div className="grid grid-cols-3 gap-2 my-4 border-y border-gray-700/50 py-2">
+                            <div className="grid grid-cols-1 gap-2 my-4 border-y border-gray-700/50 py-2">
                                 <Stat label="Duration" value={mission.duration} />
                                 <Stat label="Discoveries" value={mission.discoveries} />
                                 <Stat label="Method" value={mission.method} />

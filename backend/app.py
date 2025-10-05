@@ -71,11 +71,12 @@ class KeplerInput(BaseModel):
     koi_srad_err2: float
 
 
+
+
 # Define your prediction endpoint   
 @app.post("/predict")
 def predict(data: list[KeplerInput]):
     results = []
-
     for row in data:
         # Convert Pydantic model to list of values
         features = np.array(list(row.dict().values())).reshape(1, -1)
@@ -96,5 +97,5 @@ def predict(data: list[KeplerInput]):
 def read_root():
     return {"message":'Hello world'}
 
-if __name__ == 'main':
+if __name__ == '__main__':
     uvicorn.run(app, host = '127.0.0.1',port =8000 )

@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import Header from '../components/Header';
 import AnimatedCard from '../components/AnimatedCard';
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, BarChart, Bar, Cell } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, BarChart, Bar, Cell, ScatterChart, Scatter, CartesianGrid } from 'recharts';
 import { generateLiveAnalysisReport } from '../services/geminiService';
 
 type AnalysisStep = 'upload' | 'validating' | 'analyzing' | 'reporting' | 'done';
@@ -26,6 +26,7 @@ interface AnalysisResult {
   };
   lightCurveData: { time: number; flux: number }[] | null;
   report: string;
+  data: Record<string, any>[]; // for dataset analysis
 }
 
 const parseCSV = (csvText: string): Record<string, any>[] => {
@@ -101,7 +102,6 @@ const CandidatePropertiesChart: React.FC<{ candidate: AnalysisResult['findings']
     );
 };
 
-
 export default function LiveAnalysisPage() {
     const [file, setFile] = useState<File | null>(null);
     const [currentStep, setCurrentStep] = useState<AnalysisStep>('upload');
@@ -166,7 +166,7 @@ export default function LiveAnalysisPage() {
 
             const report = await generateLiveAnalysisReport(summary, findings);
             
-            setResults({ summary, findings, lightCurveData, report });
+            setResults({ summary, findings, lightCurveData, report, data });
 
             await new Promise(res => setTimeout(res, 500));
             setCurrentStep('done');
@@ -218,9 +218,64 @@ export default function LiveAnalysisPage() {
                     <div className="scanner-line"></div>
                     <h3 className="text-2xl font-bold font-orbitron mb-4 text-center text-blue-300">AI Analysis Feed</h3>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6 p-4 bg-black/20 rounded-lg">
-                        {results.lightCurveData ? (
-                             <div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 p-4 bg-black/20 rounded-lg">
+                        {/* Top 5 missing value columns */}
+                        <AnimatedCard>
+                            <h4 className="font-semibold text-lg text-white mb-2 text-center">Columns with Missing Values</h4>
+                            <ResponsiveContainer width="100%" height={200}>
+                                <BarChart
+                                    data={Object.entries(results.data[0]).map(([key]) => ({
+                                        column: key,
+                                        missing: results.data.filter(row => row[key] === '' || row[key] === null || row[key] === undefined).length
+                                    }))
+                                    .sort((a, b) => b.missing - a.missing)
+                                    .slice(0, 5)}
+                                    margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
+                                >
+                                    <XAxis dataKey="column" stroke="#9ca3af" fontSize={12} />
+                                    <YAxis stroke="#34d399" fontSize={12} />
+                                    <Tooltip contentStyle={{ backgroundColor: 'rgba(31, 41, 55, 0.8)', border: '1px solid #4b5563' }} />
+                                    <Bar dataKey="missing" fill="#f87171" />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </AnimatedCard>
+
+                        {/* Scatter plot Period vs Radius */}
+                        <AnimatedCard>
+                            <h4 className="font-semibold text-lg text-white mb-2 text-center">Period vs Radius</h4>
+                            <ResponsiveContainer width="100%" height={200}>
+                                <ScatterChart>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                                    <XAxis type="number" dataKey="koi_period" stroke="#9ca3af" name="Period (days)" />
+                                    <YAxis type="number" dataKey="koi_prad" stroke="#9ca3af" name="Radius (Earth)" />
+                                    <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{ backgroundColor: 'rgba(31, 41, 55, 0.8)', border: '1px solid #4b5563' }} />
+                                    <Scatter name="Candidates" data={results.data} fill="#60a5fa" />
+                                </ScatterChart>
+                            </ResponsiveContainer>
+                        </AnimatedCard>
+
+                        {/* Histogram of ESI */}
+                        <AnimatedCard>
+                            <h4 className="font-semibold text-lg text-white mb-2 text-center">ESI Score Distribution</h4>
+                            <ResponsiveContainer width="100%" height={200}>
+                                <BarChart
+                                    data={Array.from({length: 10}, (_, i) => ({
+                                        range: `${(i*0.1).toFixed(1)}-${((i+1)*0.1).toFixed(1)}`,
+                                        count: results.data.filter(row => row.esi >= i*0.1 && row.esi < (i+1)*0.1).length
+                                    }))}
+                                    margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
+                                >
+                                    <XAxis dataKey="range" stroke="#9ca3af" fontSize={12} />
+                                    <YAxis stroke="#34d399" fontSize={12} />
+                                    <Tooltip contentStyle={{ backgroundColor: 'rgba(31, 41, 55, 0.8)', border: '1px solid #4b5563' }} />
+                                    <Bar dataKey="count" fill="#facc15" />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </AnimatedCard>
+
+                        {/* Light Curve Chart */}
+                        {results.lightCurveData && (
+                            <AnimatedCard>
                                 <h4 className="font-semibold text-lg text-white mb-2 text-center">Light Curve for {results.findings.topCandidate.name}</h4>
                                 <ResponsiveContainer width="100%" height={200}>
                                     <LineChart data={results.lightCurveData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
@@ -230,16 +285,14 @@ export default function LiveAnalysisPage() {
                                         <Line type="monotone" dataKey="flux" stroke="#60a5fa" strokeWidth={1.5} dot={false} />
                                     </LineChart>
                                 </ResponsiveContainer>
-                             </div>
-                         ) : (
-                             <div className="flex items-center justify-center text-center text-gray-500 p-4 border border-dashed border-gray-700 rounded-lg">
-                                No time-series data found for light curve plotting.
-                             </div>
-                         )}
-                         <CandidatePropertiesChart candidate={results.findings.topCandidate} />
+                            </AnimatedCard>
+                        )}
+
+                        {/* Candidate Properties Chart */}
+                        <CandidatePropertiesChart candidate={results.findings.topCandidate} />
                     </div>
 
-                     <div className="prose prose-sm prose-invert max-w-none text-gray-300" dangerouslySetInnerHTML={{ __html: results.report.replace(/\n/g, '<br />') }} />
+                    <div className="prose prose-sm prose-invert max-w-none text-gray-300" dangerouslySetInnerHTML={{ __html: results.report.replace(/\n/g, '<br />') }} />
                 </AnimatedCard>
             )
         }

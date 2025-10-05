@@ -5,7 +5,7 @@ import GamePage from './GamePage';
 import TransitDetectivePage from './TransitDetectivePage';
 import HyperparameterExplorerPage from './HyperparameterExplorerPage';
 import { BASICS_QUIZ_QUESTIONS, MISSION_QUIZ_QUESTIONS, AI_QUIZ_QUESTIONS } from '../constants';
-import { JWSTVisual } from '../components/JWSTVisual';
+import { JWSTVisual } from './JWSTVisual';
 
 type View = 'hub' | 'quiz-basics' | 'quiz-missions' | 'quiz-ai' | 'game-memory' | 'game-transit' | 'game-hyperparameter';
 
@@ -26,42 +26,42 @@ export default function TrainingGroundsPage() {
 
   useEffect(() => {
     if (view !== 'hub') return;
-    
+
     const missionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                missionObserver.unobserve(entry.target);
-            }
-        });
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          missionObserver.unobserve(entry.target);
+        }
+      });
     }, { threshold: 0.3, rootMargin: '0px 0px -50px 0px' });
 
     const currentMissionRefs = missionRefs.current.filter(ref => ref !== null);
     currentMissionRefs.forEach(ref => missionObserver.observe(ref!));
 
     const pathObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                pathRef.current?.classList.add('drawing');
-                pathObserver.unobserve(entry.target);
-            }
-        });
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          pathRef.current?.classList.add('drawing');
+          pathObserver.unobserve(entry.target);
+        }
+      });
     }, { threshold: 0.1 });
 
     if (journeyRef.current) {
-        pathObserver.observe(journeyRef.current);
+      pathObserver.observe(journeyRef.current);
     }
 
     return () => {
-        currentMissionRefs.forEach(ref => {
-            if(ref) missionObserver.unobserve(ref);
-        });
-        if (journeyRef.current) {
-            pathObserver.unobserve(journeyRef.current);
-        }
+      currentMissionRefs.forEach(ref => {
+        if (ref) missionObserver.unobserve(ref);
+      });
+      if (journeyRef.current) {
+        pathObserver.unobserve(journeyRef.current);
+      }
     };
   }, [view]);
-  
+
   const handleStartJourney = () => {
     journeyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
@@ -78,7 +78,7 @@ export default function TrainingGroundsPage() {
   return (
     <div style={{ animation: 'fade-in-up 0.8s ease-out' }}>
       <Header title="Training Grounds" subtitle="Hone your skills with interactive challenges" />
-      
+
       {/* Intro Section */}
       <div className="relative text-center pt-4 pb-12 px-4 flex flex-col items-center overflow-hidden">
         <JWSTVisual />
@@ -94,36 +94,36 @@ export default function TrainingGroundsPage() {
           </button>
         </div>
       </div>
-      
+
       {/* Journey Section */}
       <div ref={journeyRef} className="parallax-starfield w-full mx-auto py-12 overflow-hidden">
-         <div className="relative w-full max-w-4xl mx-auto px-4">
-            <div className="absolute top-0 left-1/2 w-full h-full -translate-x-1/2" aria-hidden="true">
-                <svg width="100%" height="100%" viewBox="0 0 800 2400" preserveAspectRatio="none" className="w-auto h-full mx-auto">
-                    <path ref={pathRef} id="journey-path" d="M 400 50 C 200 250, 600 450, 400 650 S 200 850, 400 1050 S 600 1250, 400 1450 S 200 1650, 400 1850 S 600 2050, 400 2250" fill="none" stroke="rgba(96, 165, 250, 0.4)" strokeWidth="4"/>
-                </svg>
-            </div>
+        <div className="relative w-full max-w-4xl mx-auto px-4">
+          <div className="absolute top-0 left-1/2 w-full h-full -translate-x-1/2" aria-hidden="true">
+            <svg width="100%" height="100%" viewBox="0 0 800 2400" preserveAspectRatio="none" className="w-auto h-full mx-auto">
+              <path ref={pathRef} id="journey-path" d="M 400 50 C 200 250, 600 450, 400 650 S 200 850, 400 1050 S 600 1250, 400 1450 S 200 1650, 400 1850 S 600 2050, 400 2250" fill="none" stroke="rgba(96, 165, 250, 0.4)" strokeWidth="4" />
+            </svg>
+          </div>
 
-            {missions.map((mission, index) => {
-                return (
-                    <div
-                        key={mission.view}
-                        ref={el => { if(el) missionRefs.current[index] = el; }}
-                        className="mission-point relative my-32 flex items-center justify-center"
-                    >
-                        <div 
-                            onClick={() => setView(mission.view as View)}
-                            className="planet-mission group"
-                        >
-                            <div className="planet-icon">{mission.icon}</div>
-                            <div className="planet-info">
-                                <h3 className="font-bold text-white text-base font-orbitron">{mission.title}</h3>
-                                <p className="text-xs text-purple-300 font-semibold">Level: {mission.level}</p>
-                            </div>
-                        </div>
-                    </div>
-                );
-            })}
+          {missions.map((mission, index) => {
+            return (
+              <div
+                key={mission.view}
+                ref={el => { if (el) missionRefs.current[index] = el; }}
+                className="mission-point relative my-32 flex items-center justify-center"
+              >
+                <div
+                  onClick={() => setView(mission.view as View)}
+                  className="planet-mission group"
+                >
+                  <div className="planet-icon">{mission.icon}</div>
+                  <div className="planet-info">
+                    <h3 className="font-bold text-white text-base font-orbitron">{mission.title}</h3>
+                    <p className="text-xs text-purple-300 font-semibold">Level: {mission.level}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

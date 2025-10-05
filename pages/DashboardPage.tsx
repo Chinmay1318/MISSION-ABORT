@@ -240,7 +240,7 @@ const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>
                                             <tr key={row.kepoi_name} className="border-b border-gray-700 hover:bg-gray-800/40">
                                                 <td className="px-4 py-3 font-mono">{row.id}</td>
                                                 <td className={`px-4 py-3 font-semibold ${row.prediction === 'Confirmed Exoplanet' ? 'text-green-400' : row.prediction === 'CANDIDATE' ? 'text-yellow-400' : 'text-red-400'}`}>{row.prediction}</td>
-                                                <td className="px-4 py-3">{row.score.toFixed(0)}</td>
+                                                <td className="px-4 py-3">{row.prediction === 'Confirmed Exoplanet' ? 1 : 0}</td>
                                                 <td className="px-4 py-3">{row.period.toFixed(0)} days</td>
                                                 <td className="px-4 py-3">{row.depth} ppm</td>
                                             </tr>
