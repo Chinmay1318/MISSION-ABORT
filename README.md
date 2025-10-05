@@ -1,20 +1,24 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Welcome to Mission-Abort 👋
+![Version](https://img.shields.io/badge/version-0.0.0-blue.svg?cacheSeconds=2592000)
 
-# Run and deploy your AI Studio app
+> Exoplanet discovery has advanced through missions like Kepler, K2, and TESS, which use the transit method to detect planets by observing dips in starlight. These missions provide publicly available datasets containing information on confirmed exoplanets, candidates, and false positives, including orbital periods, transit durations, and planetary radii. While much of the analysis has historically been manual, recent research shows that machine learning can automate exoplanet identification with high accuracy, especially when combined with proper data preprocessing. Leveraging these datasets can accelerate discoveries of previously hidden exoplanets.
 
-This contains everything you need to run your app locally.
+## Install
 
-View your app in AI Studio: https://ai.studio/apps/drive/1dZSiOmK7-relYcrgUyJD-gganlbdt9Ps
+```sh
+npm install
+```
 
-## Run Locally
+## Author
 
-**Prerequisites:**  Node.js
+👤 **Prajwal M**
+
+* Github: [@Prajwal2213](https://github.com/Prajwal2213)
+
+## Show your support
+
+Give a ⭐️ if this project helped you!
 
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+***
+_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
