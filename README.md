@@ -166,7 +166,7 @@ vite@^6.2.0
 
 ### 8. Hyperparameter
 
-<img src = 'components/images/Hyperparameter.png' />
+<img src = 'components/images/hyperparameter.png' />
 
 
 
