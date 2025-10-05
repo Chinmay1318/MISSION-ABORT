@@ -137,7 +137,7 @@ vite@^6.2.0
 
 ### 1.Hero Section 
 
-<img src = 'components/images/Hero_section.jpg />
+<img src = 'components/images/Hero_section.png />
 
 ### 2.AI Dashboard
 
@@ -165,7 +165,6 @@ vite@^6.2.0
 
 
 ### 8. Hyperparameter
-components/
 <img src = 'components/images/Hyperparameter.png'>
 
 
